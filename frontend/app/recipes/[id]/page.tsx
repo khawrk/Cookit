@@ -1,6 +1,5 @@
 "use client";
 
-import { use } from "react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/Badge";
@@ -9,8 +8,8 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useRecipe } from "@/lib/hooks/useRecipes";
 import type { RecipeIngredient, RecipeStep } from "@/types/recipe";
 
-export default function RecipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function RecipeDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const { data: recipe, isLoading, error } = useRecipe(id);
 
   if (isLoading) {
