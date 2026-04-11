@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import get_settings
 from app.models.schemas import DetectedItem, ScanResponse
 from app.services import storage
+from app.services.normalize import normalize_batch
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -112,9 +113,18 @@ async def detect_items(file: UploadFile, db: AsyncSession, user_id: uuid.UUID) -
         except Exception as exc:
             logger.warning("Skipping invalid item %s: %s", item_data, exc)
 
+    # Normalize item names via Haiku so they match recipe_ingredients canonical names
+    raw_names = [item.item_name for item in detected]
+    try:
+        normalized = await normalize_batch(raw_names)
+        canonical_names = [n.canonical_name for n in normalized]
+    except Exception as exc:
+        logger.warning("Normalization failed, using raw names: %s", exc)
+        canonical_names = raw_names
+
     # Upsert into fridge_items
     saved_count = 0
-    for item in detected:
+    for item, canonical_name in zip(detected, canonical_names):
         await db.execute(
             text(
                 """
@@ -130,7 +140,7 @@ async def detect_items(file: UploadFile, db: AsyncSession, user_id: uuid.UUID) -
             ),
             {
                 "user_id": str(user_id),
-                "item_name": item.item_name,
+                "item_name": canonical_name,
                 "category": item.category,
                 "quantity": item.quantity,
                 "unit": item.unit,
