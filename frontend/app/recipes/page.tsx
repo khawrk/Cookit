@@ -67,8 +67,8 @@ export default function RecipesPage() {
         {data && data.recommendations.length > 0 && (
           <div className="flex flex-col gap-3">
             {data.recommendations.map((rec) => (
-              <Link key={rec.recipe_id} href={rec.source_url ? `/recipes/${rec.recipe_id}` : rec.source_url || "#"} onClick={!rec.source_url ? (e) => e.preventDefault() : undefined}>
-                <Card className={`hover:shadow-md hover:border-slate-300 transition-all ${rec.source_url ? "cursor-pointer active:scale-[0.99]" : "cursor-default"}`}>
+              <Link key={rec.recipe_id} href={`/recipes/${rec.recipe_id}`}>
+                <Card className="hover:shadow-md hover:border-slate-300 transition-all cursor-pointer active:scale-[0.99]">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex-1 min-w-0">
                       <h2 className="font-semibold text-slate-900 leading-snug">{rec.title}</h2>
