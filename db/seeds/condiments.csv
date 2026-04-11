@@ -1,0 +1,212 @@
+name,category,default_unit
+soy sauce,condiment,tbsp
+fish sauce,condiment,tbsp
+oyster sauce,condiment,tbsp
+hoisin sauce,condiment,tbsp
+sriracha,condiment,tbsp
+tabasco,condiment,tsp
+worcestershire sauce,condiment,tbsp
+ketchup,condiment,tbsp
+mustard,condiment,tbsp
+dijon mustard,condiment,tbsp
+whole grain mustard,condiment,tbsp
+mayonnaise,condiment,tbsp
+hot sauce,condiment,tsp
+barbecue sauce,condiment,tbsp
+teriyaki sauce,condiment,tbsp
+sweet chili sauce,condiment,tbsp
+chili garlic sauce,condiment,tbsp
+sambal oelek,condiment,tsp
+gochujang,condiment,tbsp
+miso paste,condiment,tbsp
+tahini,condiment,tbsp
+peanut butter,condiment,tbsp
+almond butter,condiment,tbsp
+hummus,condiment,tbsp
+tzatziki,condiment,tbsp
+ranch dressing,condiment,tbsp
+caesar dressing,condiment,tbsp
+balsamic vinegar,condiment,tbsp
+red wine vinegar,condiment,tbsp
+white wine vinegar,condiment,tbsp
+rice vinegar,condiment,tbsp
+apple cider vinegar,condiment,tbsp
+sherry vinegar,condiment,tbsp
+olive oil,condiment,tbsp
+extra virgin olive oil,condiment,tbsp
+sesame oil,condiment,tsp
+coconut oil,condiment,tbsp
+vegetable oil,condiment,tbsp
+canola oil,condiment,tbsp
+avocado oil,condiment,tbsp
+truffle oil,condiment,tsp
+chili oil,condiment,tsp
+lemon juice,condiment,tbsp
+lime juice,condiment,tbsp
+orange juice,condiment,tbsp
+soy milk,condiment,cup
+coconut milk,condiment,cup
+coconut cream,condiment,cup
+evaporated milk,condiment,cup
+condensed milk,condiment,tbsp
+heavy cream,condiment,tbsp
+sour cream,condiment,tbsp
+cream cheese,condiment,tbsp
+butter,condiment,tbsp
+ghee,condiment,tbsp
+lard,condiment,tbsp
+tomato paste,condiment,tbsp
+tomato sauce,condiment,cup
+crushed tomatoes,condiment,cup
+diced tomatoes,condiment,cup
+salsa,condiment,tbsp
+pesto,condiment,tbsp
+sun-dried tomato paste,condiment,tbsp
+anchovy paste,condiment,tsp
+marmite,condiment,tsp
+vegemite,condiment,tsp
+honey,condiment,tbsp
+maple syrup,condiment,tbsp
+agave syrup,condiment,tbsp
+molasses,condiment,tbsp
+corn syrup,condiment,tbsp
+golden syrup,condiment,tbsp
+jam,condiment,tbsp
+strawberry jam,condiment,tbsp
+raspberry jam,condiment,tbsp
+marmalade,condiment,tbsp
+nutella,condiment,tbsp
+vanilla extract,condiment,tsp
+almond extract,condiment,tsp
+soy bean paste,condiment,tbsp
+doubanjiang,condiment,tbsp
+black bean sauce,condiment,tbsp
+plum sauce,condiment,tbsp
+char siu sauce,condiment,tbsp
+shaoxing wine,condiment,tbsp
+mirin,condiment,tbsp
+sake,condiment,tbsp
+rice wine,condiment,tbsp
+dry sherry,condiment,tbsp
+white wine,condiment,tbsp
+red wine,condiment,tbsp
+balsamic glaze,condiment,tbsp
+capers,condiment,tbsp
+olives,condiment,count
+sun-dried tomatoes,condiment,tbsp
+roasted red peppers,condiment,tbsp
+artichoke hearts,condiment,count
+pickled jalapeños,condiment,tbsp
+pickles,condiment,count
+relish,condiment,tbsp
+hot mustard,condiment,tbsp
+wasabi,condiment,tsp
+prepared horseradish,condiment,tsp
+chimichurri,condiment,tbsp
+harissa,condiment,tbsp
+za'atar,condiment,tsp
+sumac,condiment,tsp
+ras el hanout,condiment,tsp
+curry paste,condiment,tbsp
+red curry paste,condiment,tbsp
+green curry paste,condiment,tbsp
+yellow curry paste,condiment,tbsp
+massaman curry paste,condiment,tbsp
+laksa paste,condiment,tbsp
+rendang paste,condiment,tbsp
+satay sauce,condiment,tbsp
+nam prik,condiment,tsp
+shrimp paste,condiment,tsp
+fermented black beans,condiment,tbsp
+pickled ginger,condiment,tbsp
+umeboshi paste,condiment,tsp
+ponzu sauce,condiment,tbsp
+tonkatsu sauce,condiment,tbsp
+bull-dog sauce,condiment,tbsp
+dashi,condiment,cup
+mirin,condiment,tbsp
+cooking sake,condiment,tbsp
+chinese five spice,condiment,tsp
+star anise,condiment,count
+sichuan peppercorns,condiment,tsp
+white pepper,condiment,tsp
+black pepper,condiment,tsp
+salt,condiment,tsp
+sea salt,condiment,tsp
+kosher salt,condiment,tsp
+fleur de sel,condiment,tsp
+smoked salt,condiment,tsp
+garlic powder,condiment,tsp
+onion powder,condiment,tsp
+paprika,condiment,tsp
+smoked paprika,condiment,tsp
+cumin,condiment,tsp
+coriander,condiment,tsp
+turmeric,condiment,tsp
+chili flakes,condiment,tsp
+cayenne pepper,condiment,tsp
+oregano,condiment,tsp
+thyme,condiment,tsp
+rosemary,condiment,tsp
+bay leaves,condiment,count
+cinnamon,condiment,tsp
+nutmeg,condiment,tsp
+cloves,condiment,count
+cardamom,condiment,tsp
+garam masala,condiment,tsp
+curry powder,condiment,tsp
+chaat masala,condiment,tsp
+everything bagel seasoning,condiment,tsp
+italian seasoning,condiment,tsp
+herbs de provence,condiment,tsp
+old bay seasoning,condiment,tsp
+cajun seasoning,condiment,tsp
+taco seasoning,condiment,tsp
+fajita seasoning,condiment,tsp
+lemon pepper,condiment,tsp
+garlic salt,condiment,tsp
+celery salt,condiment,tsp
+dried chives,condiment,tsp
+dried dill,condiment,tsp
+dried parsley,condiment,tsp
+dried basil,condiment,tsp
+dried mint,condiment,tsp
+dried tarragon,condiment,tsp
+dried sage,condiment,tsp
+dried marjoram,condiment,tsp
+dried fennel seeds,condiment,tsp
+mustard seeds,condiment,tsp
+poppy seeds,condiment,tsp
+sesame seeds,condiment,tsp
+caraway seeds,condiment,tsp
+fenugreek,condiment,tsp
+saffron,condiment,tsp
+vanilla bean paste,condiment,tsp
+cocoa powder,condiment,tbsp
+instant coffee,condiment,tsp
+miso,condiment,tbsp
+white miso,condiment,tbsp
+red miso,condiment,tbsp
+bouillon cube,condiment,count
+chicken stock concentrate,condiment,tsp
+beef stock concentrate,condiment,tsp
+vegetable stock concentrate,condiment,tsp
+fish stock,condiment,cup
+demi-glace,condiment,tbsp
+cornstarch,condiment,tbsp
+arrowroot powder,condiment,tbsp
+baking powder,condiment,tsp
+baking soda,condiment,tsp
+cream of tartar,condiment,tsp
+active dry yeast,condiment,tsp
+instant yeast,condiment,tsp
+xanthan gum,condiment,tsp
+gelatin,condiment,tsp
+agar agar,condiment,tsp
+msg,condiment,tsp
+nutritional yeast,condiment,tbsp
+liquid smoke,condiment,tsp
+worcestershire powder,condiment,tsp
+cacao nibs,condiment,tbsp
+coconut aminos,condiment,tbsp
+bragg liquid aminos,condiment,tbsp
