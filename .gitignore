@@ -44,3 +44,6 @@ Thumbs.db
 
 # Docker volumes
 pgdata/
+
+#.claude
+.claude/*
