@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -27,7 +28,6 @@ async function convertHeicToJpeg(file: File): Promise<File> {
 }
 
 async function prepareImage(file: File): Promise<File> {
-  // Convert HEIC first — browsers can't decode it natively
   const source = isHeic(file) ? await convertHeicToJpeg(file) : file;
 
   return new Promise((resolve) => {
@@ -57,6 +57,7 @@ async function prepareImage(file: File): Promise<File> {
 }
 
 export default function ScanPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -64,14 +65,12 @@ export default function ScanPage() {
   const [detectedItems, setDetectedItems] = useState<DetectedItem[] | null>(null);
   const scanMutation = useScanFridge();
 
-  // Auto-scroll to results as soon as they arrive — fixes the "can't see results" bug on mobile
   useEffect(() => {
     if (detectedItems !== null) {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [detectedItems]);
 
-  // Also scroll to analyzing spinner so user knows something is happening
   const analyzeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (scanMutation.isPending) {
@@ -101,8 +100,8 @@ export default function ScanPage() {
     <div className="min-h-[calc(100vh-56px)] bg-slate-50">
       <div className="max-w-lg mx-auto px-4 py-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Scan Your Fridge</h1>
-          <p className="text-slate-500 mt-1 text-sm">AI will detect everything visible in your photo.</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t("scan.title")}</h1>
+          <p className="text-slate-500 mt-1 text-sm">{t("scan.subtitle")}</p>
         </div>
 
         <input
@@ -128,8 +127,8 @@ export default function ScanPage() {
               </svg>
             </div>
             <div className="text-center">
-              <p className="font-semibold text-slate-800">Take or upload a photo</p>
-              <p className="text-sm text-slate-400 mt-1">Camera, gallery, or AirDrop HEIC — all supported</p>
+              <p className="font-semibold text-slate-800">{t("scan.uploadTitle")}</p>
+              <p className="text-sm text-slate-400 mt-1">{t("scan.uploadSubtitle")}</p>
             </div>
           </button>
         )}
@@ -137,7 +136,6 @@ export default function ScanPage() {
         {/* Step 2 — Preview + results */}
         {preview && (
           <div className="flex flex-col gap-4">
-            {/* Thumbnail — smaller once scanning starts so results fit on screen */}
             <div className="relative">
               <img
                 src={preview}
@@ -151,7 +149,7 @@ export default function ScanPage() {
                 onClick={handleRetake}
                 className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white text-xs px-2.5 py-1 rounded-full transition-colors"
               >
-                Retake
+                {t("scan.retakeButton")}
               </button>
             </div>
 
@@ -161,8 +159,8 @@ export default function ScanPage() {
                 <Card className="flex items-center gap-3 bg-green-50 border-green-200">
                   <Spinner size="sm" />
                   <div>
-                    <p className="text-sm font-medium text-green-800">Analysing your fridge…</p>
-                    <p className="text-xs text-green-600">This takes about 5–10 seconds</p>
+                    <p className="text-sm font-medium text-green-800">{t("scan.analysingTitle")}</p>
+                    <p className="text-xs text-green-600">{t("scan.analysingSubtitle")}</p>
                   </div>
                 </Card>
               </div>
@@ -171,7 +169,7 @@ export default function ScanPage() {
             {/* Error state */}
             {scanMutation.isError && (
               <Card className="border-red-200 bg-red-50">
-                <p className="text-sm font-medium text-red-700">Scan failed</p>
+                <p className="text-sm font-medium text-red-700">{t("scan.scanFailed")}</p>
                 <p className="text-xs text-red-500 mt-1">{scanMutation.error?.message}</p>
                 <Button
                   size="sm"
@@ -179,7 +177,7 @@ export default function ScanPage() {
                   className="mt-3"
                   onClick={() => inputRef.current?.click()}
                 >
-                  Try again
+                  {t("scan.tryAgainButton")}
                 </Button>
               </Card>
             )}
@@ -190,15 +188,15 @@ export default function ScanPage() {
                 <Card>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold text-slate-900">
-                      {detectedItems.length} item{detectedItems.length !== 1 ? "s" : ""} detected
+                      {t("scan.itemsDetected", { count: detectedItems.length })}
                     </h2>
                     <Badge variant={detectedItems.length > 0 ? "green" : "gray"}>
-                      Saved to fridge
+                      {t("scan.savedToFridge")}
                     </Badge>
                   </div>
 
                   {detectedItems.length === 0 ? (
-                    <p className="text-sm text-slate-500">Nothing detected — try a clearer photo with better lighting.</p>
+                    <p className="text-sm text-slate-500">{t("scan.nothingDetected")}</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
                       {detectedItems.map((item, idx) => (
@@ -218,17 +216,16 @@ export default function ScanPage() {
                   )}
                 </Card>
 
-                {/* Next steps — clearly visible */}
                 <div className="flex flex-col gap-2">
                   <Button onClick={() => router.push("/recipes")} className="w-full" size="lg">
-                    Get Recipe Recommendations
+                    {t("scan.recipesCta")}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => router.push("/fridge")}
                     className="w-full"
                   >
-                    View My Fridge
+                    {t("scan.viewFridgeCta")}
                   </Button>
                 </div>
               </div>

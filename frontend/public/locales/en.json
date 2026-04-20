@@ -1,0 +1,110 @@
+{
+  "nav": {
+    "brand": "Cookit",
+    "myFridge": "My Fridge",
+    "recipes": "Recipes"
+  },
+  "langToggle": {
+    "en": "ENG",
+    "th": "THAI"
+  },
+  "login": {
+    "signInSubtitle": "Sign in to continue",
+    "registerSubtitle": "Create your account",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "signInButton": "Sign in",
+    "createAccountButton": "Create account",
+    "noAccount": "No account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "registerLink": "Register",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "fridge": {
+    "title": "My Fridge",
+    "scanButton": "Scan",
+    "addItemButton": "Add Item",
+    "loadError": "Failed to load fridge items. Please try again.",
+    "emptyTitle": "Your fridge is empty",
+    "emptySubtitle": "Add items by scanning a photo or manually",
+    "scanCta": "Scan your fridge",
+    "addManuallyCta": "Add manually",
+    "recipesCta": "Get Recipe Recommendations",
+    "editModalTitle": "Edit: {{name}}",
+    "quantityLabel": "Quantity",
+    "unitLabel": "Unit",
+    "unitPlaceholder": "count, g, ml…",
+    "editButton": "Edit",
+    "removeButton": "Remove",
+    "cancelButton": "Cancel",
+    "saveButton": "Save"
+  },
+  "scan": {
+    "title": "Scan Your Fridge",
+    "subtitle": "AI will detect everything visible in your photo.",
+    "uploadTitle": "Take or upload a photo",
+    "uploadSubtitle": "Camera, gallery, or AirDrop HEIC — all supported",
+    "retakeButton": "Retake",
+    "analysingTitle": "Analysing your fridge…",
+    "analysingSubtitle": "This takes about 5–10 seconds",
+    "scanFailed": "Scan failed",
+    "itemsDetected_one": "{{count}} item detected",
+    "itemsDetected_other": "{{count}} items detected",
+    "savedToFridge": "Saved to fridge",
+    "nothingDetected": "Nothing detected — try a clearer photo with better lighting.",
+    "recipesCta": "Get Recipe Recommendations",
+    "viewFridgeCta": "View My Fridge",
+    "tryAgainButton": "Try again"
+  },
+  "manual": {
+    "title": "Add Item Manually",
+    "subtitle": "Select a condiment from the catalogue or type a custom item.",
+    "catalogueTitle": "Condiments Catalogue",
+    "catalogueSearch": "Search condiments…",
+    "noMatches": "No matches",
+    "itemNameLabel": "Item name",
+    "itemNamePlaceholder": "e.g. fish sauce",
+    "quantityLabel": "Quantity",
+    "unitLabel": "Unit",
+    "successMessage": "Item added to your fridge!",
+    "backButton": "Back to Fridge",
+    "addButton": "Add to Fridge",
+    "units": {
+      "count": "count",
+      "g": "grams (g)",
+      "ml": "ml",
+      "bottle": "bottle",
+      "jar": "jar",
+      "pack": "pack",
+      "tbsp": "tablespoon",
+      "tsp": "teaspoon",
+      "cup": "cup",
+      "bunch": "bunch"
+    }
+  },
+  "recipes": {
+    "title": "Recipes for You",
+    "subtitle": "Based on what's in your fridge right now",
+    "loading": "Finding the best recipes for your fridge…",
+    "loadError": "Failed to load recommendations.",
+    "backToFridge": "← Back to Fridge",
+    "emptyTitle": "No recipes found",
+    "emptySubtitle": "Try adding more items to your fridge",
+    "scanCta": "Scan your fridge →",
+    "have": "Have: ",
+    "need": "Need: ",
+    "moreIngredients": "+{{n}} more"
+  },
+  "recipeDetail": {
+    "backLink": "Back to recommendations",
+    "notFound": "Recipe not found.",
+    "backToRecipes": "← Back to recipes",
+    "ingredientsTitle": "Ingredients",
+    "instructionsTitle": "Instructions",
+    "steps": "{{n}} steps",
+    "recipeFrom": "Recipe from"
+  }
+}

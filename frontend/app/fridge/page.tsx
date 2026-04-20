@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -23,6 +24,7 @@ const categoryColors: Record<string, "green" | "blue" | "yellow" | "red" | "gray
 };
 
 function FridgeItemCard({ item }: { item: FridgeItem }) {
+  const { t } = useTranslation();
   const [editOpen, setEditOpen] = useState(false);
   const [quantity, setQuantity] = useState(String(item.quantity ?? ""));
   const [unit, setUnit] = useState(item.unit ?? "");
@@ -58,7 +60,7 @@ function FridgeItemCard({ item }: { item: FridgeItem }) {
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <Button variant="ghost" size="sm" onClick={() => setEditOpen(true)}>
-            Edit
+            {t("fridge.editButton")}
           </Button>
           <Button
             variant="danger"
@@ -66,29 +68,29 @@ function FridgeItemCard({ item }: { item: FridgeItem }) {
             loading={deleteMutation.isPending}
             onClick={() => deleteMutation.mutate(item.id)}
           >
-            Remove
+            {t("fridge.removeButton")}
           </Button>
         </div>
       </Card>
 
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title={`Edit: ${item.item_name}`}>
+      <Modal open={editOpen} onClose={() => setEditOpen(false)} title={t("fridge.editModalTitle", { name: item.item_name })}>
         <div className="flex flex-col gap-4">
           <Input
-            label="Quantity"
+            label={t("fridge.quantityLabel")}
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
           <Input
-            label="Unit"
+            label={t("fridge.unitLabel")}
             type="text"
-            placeholder="count, g, ml…"
+            placeholder={t("fridge.unitPlaceholder")}
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
           />
           <div className="flex gap-2 justify-end">
-            <Button variant="secondary" onClick={() => setEditOpen(false)}>Cancel</Button>
-            <Button loading={updateMutation.isPending} onClick={handleSave}>Save</Button>
+            <Button variant="secondary" onClick={() => setEditOpen(false)}>{t("fridge.cancelButton")}</Button>
+            <Button loading={updateMutation.isPending} onClick={handleSave}>{t("fridge.saveButton")}</Button>
           </div>
         </div>
       </Modal>
@@ -97,6 +99,7 @@ function FridgeItemCard({ item }: { item: FridgeItem }) {
 }
 
 export default function FridgePage() {
+  const { t } = useTranslation();
   const { data: items, isLoading, error } = useFridgeItems();
 
   return (
@@ -105,7 +108,7 @@ export default function FridgePage() {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h1 className="text-2xl font-bold text-slate-900">My Fridge</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t("fridge.title")}</h1>
           <div className="flex gap-2">
             <Link href="/fridge/scan">
               <Button size="sm">
@@ -114,7 +117,7 @@ export default function FridgePage() {
                     d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Scan
+                {t("fridge.scanButton")}
               </Button>
             </Link>
             <Link href="/fridge/manual">
@@ -122,7 +125,7 @@ export default function FridgePage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                Add Item
+                {t("fridge.addItemButton")}
               </Button>
             </Link>
           </div>
@@ -138,7 +141,7 @@ export default function FridgePage() {
         {/* Error */}
         {error && (
           <Card className="text-center py-8 border-red-100">
-            <p className="text-red-500 text-sm">Failed to load fridge items. Please try again.</p>
+            <p className="text-red-500 text-sm">{t("fridge.loadError")}</p>
           </Card>
         )}
 
@@ -151,14 +154,14 @@ export default function FridgePage() {
                   d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
               </svg>
             </div>
-            <p className="text-slate-600 font-medium mb-1">Your fridge is empty</p>
-            <p className="text-slate-400 text-sm mb-6">Add items by scanning a photo or manually</p>
+            <p className="text-slate-600 font-medium mb-1">{t("fridge.emptyTitle")}</p>
+            <p className="text-slate-400 text-sm mb-6">{t("fridge.emptySubtitle")}</p>
             <div className="flex justify-center gap-3">
               <Link href="/fridge/scan">
-                <Button>Scan your fridge</Button>
+                <Button>{t("fridge.scanCta")}</Button>
               </Link>
               <Link href="/fridge/manual">
-                <Button variant="secondary">Add manually</Button>
+                <Button variant="secondary">{t("fridge.addManuallyCta")}</Button>
               </Link>
             </div>
           </div>
@@ -177,7 +180,7 @@ export default function FridgePage() {
             <div className="mt-6 sticky bottom-4">
               <Link href="/recipes">
                 <Button size="lg" className="w-full shadow-lg shadow-green-200">
-                  Get Recipe Recommendations
+                  {t("fridge.recipesCta")}
                   <svg className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -21,6 +22,7 @@ function MatchBar({ score }: { score: number }) {
 }
 
 export default function RecipesPage() {
+  const { t } = useTranslation();
   const { data, isLoading, error } = useRecommendations();
 
   return (
@@ -28,22 +30,22 @@ export default function RecipesPage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
 
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Recipes for You</h1>
-          <p className="text-slate-500 text-sm mt-1">Based on what's in your fridge right now</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t("recipes.title")}</h1>
+          <p className="text-slate-500 text-sm mt-1">{t("recipes.subtitle")}</p>
         </div>
 
         {isLoading && (
           <div className="flex flex-col items-center gap-3 py-16">
             <Spinner size="lg" />
-            <p className="text-slate-500 text-sm">Finding the best recipes for your fridge…</p>
+            <p className="text-slate-500 text-sm">{t("recipes.loading")}</p>
           </div>
         )}
 
         {error && (
           <Card className="text-center py-8 border-red-100">
-            <p className="text-red-500 text-sm">Failed to load recommendations.</p>
+            <p className="text-red-500 text-sm">{t("recipes.loadError")}</p>
             <Link href="/fridge" className="text-sm text-green-600 hover:underline mt-2 inline-block">
-              ← Back to Fridge
+              {t("recipes.backToFridge")}
             </Link>
           </Card>
         )}
@@ -56,10 +58,10 @@ export default function RecipesPage() {
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <p className="text-slate-600 font-medium mb-1">No recipes found</p>
-            <p className="text-slate-400 text-sm mb-4">Try adding more items to your fridge</p>
+            <p className="text-slate-600 font-medium mb-1">{t("recipes.emptyTitle")}</p>
+            <p className="text-slate-400 text-sm mb-4">{t("recipes.emptySubtitle")}</p>
             <Link href="/fridge/scan" className="text-green-600 hover:underline text-sm font-medium">
-              Scan your fridge →
+              {t("recipes.scanCta")}
             </Link>
           </div>
         )}
@@ -84,19 +86,19 @@ export default function RecipesPage() {
                   <div className="mt-3 flex flex-col gap-1">
                     {rec.matched_ingredients.length > 0 && (
                       <p className="text-xs text-slate-500">
-                        <span className="text-green-600 font-medium">Have: </span>
+                        <span className="text-green-600 font-medium">{t("recipes.have")}</span>
                         {rec.matched_ingredients.slice(0, 5).join(", ")}
                         {rec.matched_ingredients.length > 5 && (
-                          <span className="text-slate-400"> +{rec.matched_ingredients.length - 5} more</span>
+                          <span className="text-slate-400"> {t("recipes.moreIngredients", { n: rec.matched_ingredients.length - 5 })}</span>
                         )}
                       </p>
                     )}
                     {rec.missing_ingredients.length > 0 && (
                       <p className="text-xs text-slate-500">
-                        <span className="text-orange-500 font-medium">Need: </span>
+                        <span className="text-orange-500 font-medium">{t("recipes.need")}</span>
                         {rec.missing_ingredients.slice(0, 4).join(", ")}
                         {rec.missing_ingredients.length > 4 && (
-                          <span className="text-slate-400"> +{rec.missing_ingredients.length - 4} more</span>
+                          <span className="text-slate-400"> {t("recipes.moreIngredients", { n: rec.missing_ingredients.length - 4 })}</span>
                         )}
                       </p>
                     )}

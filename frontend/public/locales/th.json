@@ -1,0 +1,110 @@
+{
+  "nav": {
+    "brand": "คุกอิท",
+    "myFridge": "ตู้เย็นของฉัน",
+    "recipes": "สูตรอาหาร"
+  },
+  "langToggle": {
+    "en": "ENG",
+    "th": "ภาษาไทย"
+  },
+  "login": {
+    "signInSubtitle": "เข้าสู่ระบบเพื่อดำเนินการต่อ",
+    "registerSubtitle": "สร้างบัญชีของคุณ",
+    "nameLabel": "ชื่อ",
+    "namePlaceholder": "ชื่อของคุณ",
+    "emailLabel": "อีเมล",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "รหัสผ่าน",
+    "signInButton": "เข้าสู่ระบบ",
+    "createAccountButton": "สร้างบัญชี",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "alreadyHaveAccount": "มีบัญชีอยู่แล้ว?",
+    "registerLink": "สมัครสมาชิก",
+    "somethingWentWrong": "เกิดข้อผิดพลาดบางอย่าง"
+  },
+  "fridge": {
+    "title": "ตู้เย็นของฉัน",
+    "scanButton": "สแกน",
+    "addItemButton": "เพิ่มรายการ",
+    "loadError": "โหลดรายการตู้เย็นไม่สำเร็จ กรุณาลองใหม่",
+    "emptyTitle": "ตู้เย็นของคุณว่างเปล่า",
+    "emptySubtitle": "เพิ่มรายการโดยการสแกนรูปหรือเพิ่มเอง",
+    "scanCta": "สแกนตู้เย็น",
+    "addManuallyCta": "เพิ่มเอง",
+    "recipesCta": "รับคำแนะนำสูตรอาหาร",
+    "editModalTitle": "แก้ไข: {{name}}",
+    "quantityLabel": "ปริมาณ",
+    "unitLabel": "หน่วย",
+    "unitPlaceholder": "ชิ้น, ก, มล…",
+    "editButton": "แก้ไข",
+    "removeButton": "ลบ",
+    "cancelButton": "ยกเลิก",
+    "saveButton": "บันทึก"
+  },
+  "scan": {
+    "title": "สแกนตู้เย็น",
+    "subtitle": "AI จะตรวจจับทุกอย่างที่มองเห็นในภาพถ่าย",
+    "uploadTitle": "ถ่ายหรืออัปโหลดรูปภาพ",
+    "uploadSubtitle": "กล้อง แกลเลอรี หรือ AirDrop HEIC — รองรับทั้งหมด",
+    "retakeButton": "ถ่ายใหม่",
+    "analysingTitle": "กำลังวิเคราะห์ตู้เย็นของคุณ…",
+    "analysingSubtitle": "ใช้เวลาประมาณ 5–10 วินาที",
+    "scanFailed": "การสแกนล้มเหลว",
+    "itemsDetected_one": "ตรวจพบ {{count}} รายการ",
+    "itemsDetected_other": "ตรวจพบ {{count}} รายการ",
+    "savedToFridge": "บันทึกลงตู้เย็นแล้ว",
+    "nothingDetected": "ไม่พบรายการ — ลองถ่ายภาพที่ชัดขึ้นพร้อมแสงที่ดีขึ้น",
+    "recipesCta": "รับคำแนะนำสูตรอาหาร",
+    "viewFridgeCta": "ดูตู้เย็นของฉัน",
+    "tryAgainButton": "ลองอีกครั้ง"
+  },
+  "manual": {
+    "title": "เพิ่มรายการด้วยตนเอง",
+    "subtitle": "เลือกเครื่องปรุงจากแคตตาล็อกหรือพิมพ์รายการเอง",
+    "catalogueTitle": "แคตตาล็อกเครื่องปรุง",
+    "catalogueSearch": "ค้นหาเครื่องปรุง…",
+    "noMatches": "ไม่พบรายการ",
+    "itemNameLabel": "ชื่อรายการ",
+    "itemNamePlaceholder": "เช่น น้ำปลา",
+    "quantityLabel": "ปริมาณ",
+    "unitLabel": "หน่วย",
+    "successMessage": "เพิ่มรายการลงตู้เย็นแล้ว!",
+    "backButton": "กลับไปที่ตู้เย็น",
+    "addButton": "เพิ่มลงตู้เย็น",
+    "units": {
+      "count": "ชิ้น",
+      "g": "กรัม (ก)",
+      "ml": "มิลลิลิตร",
+      "bottle": "ขวด",
+      "jar": "กระปุก",
+      "pack": "แพ็ค",
+      "tbsp": "ช้อนโต๊ะ",
+      "tsp": "ช้อนชา",
+      "cup": "ถ้วย",
+      "bunch": "ช่อ"
+    }
+  },
+  "recipes": {
+    "title": "สูตรอาหารสำหรับคุณ",
+    "subtitle": "จากวัตถุดิบในตู้เย็นของคุณตอนนี้",
+    "loading": "กำลังค้นหาสูตรอาหารที่ดีที่สุดสำหรับตู้เย็นของคุณ…",
+    "loadError": "โหลดคำแนะนำไม่สำเร็จ",
+    "backToFridge": "← กลับไปที่ตู้เย็น",
+    "emptyTitle": "ไม่พบสูตรอาหาร",
+    "emptySubtitle": "ลองเพิ่มรายการในตู้เย็นให้มากขึ้น",
+    "scanCta": "สแกนตู้เย็น →",
+    "have": "มี: ",
+    "need": "ขาด: ",
+    "moreIngredients": "+{{n}} อีก"
+  },
+  "recipeDetail": {
+    "backLink": "กลับสู่คำแนะนำ",
+    "notFound": "ไม่พบสูตรอาหาร",
+    "backToRecipes": "← กลับสู่สูตรอาหาร",
+    "ingredientsTitle": "ส่วนผสม",
+    "instructionsTitle": "วิธีทำ",
+    "steps": "{{n}} ขั้นตอน",
+    "recipeFrom": "สูตรอาหารจาก"
+  }
+}

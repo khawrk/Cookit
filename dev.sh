@@ -29,9 +29,10 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 # ── checks ────────────────────────────────────────────────────────────────────
-command -v docker   >/dev/null 2>&1 || die "docker not found"
-command -v python3  >/dev/null 2>&1 || die "python3 not found"
-command -v pnpm     >/dev/null 2>&1 || die "pnpm not found (run: npm i -g pnpm)"
+command -v docker    >/dev/null 2>&1 || die "docker not found"
+command -v python3.12 >/dev/null 2>&1 || die "python3.12 not found (install Python 3.12 for backend compatibility)"
+command -v pnpm      >/dev/null 2>&1 || die "pnpm not found (run: npm i -g pnpm)"
+PYTHON_BIN="python3.12"
 
 # ── env file ──────────────────────────────────────────────────────────────────
 if [ ! -f "$BACKEND/.env" ]; then
@@ -62,9 +63,15 @@ done
 ok "Postgres ready"
 
 # ── 3. python venv ────────────────────────────────────────────────────────────
+if [ -d "$BACKEND/.venv" ]; then
+  if ! "$BACKEND/.venv/bin/python" -c 'import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 12) else 1)' >/dev/null 2>&1; then
+    warn "Existing backend/.venv is not Python 3.12 — recreating"
+    rm -rf "$BACKEND/.venv"
+  fi
+fi
 if [ ! -d "$BACKEND/.venv" ]; then
-  log "Creating Python virtual environment…"
-  python3 -m venv "$BACKEND/.venv"
+  log "Creating Python 3.12 virtual environment…"
+  "$PYTHON_BIN" -m venv "$BACKEND/.venv"
 fi
 source "$BACKEND/.venv/bin/activate"
 
