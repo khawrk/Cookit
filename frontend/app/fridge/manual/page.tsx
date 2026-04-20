@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -10,20 +11,8 @@ import { Select } from "@/components/ui/Select";
 import { Spinner } from "@/components/ui/Spinner";
 import { useAddFridgeItem, useCondimentsCatalog } from "@/lib/hooks/useFridge";
 
-const UNIT_OPTIONS = [
-  { value: "count", label: "count" },
-  { value: "g", label: "grams (g)" },
-  { value: "ml", label: "ml" },
-  { value: "bottle", label: "bottle" },
-  { value: "jar", label: "jar" },
-  { value: "pack", label: "pack" },
-  { value: "tbsp", label: "tablespoon" },
-  { value: "tsp", label: "teaspoon" },
-  { value: "cup", label: "cup" },
-  { value: "bunch", label: "bunch" },
-];
-
 export default function ManualAddPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { data: catalog, isLoading: catalogLoading } = useCondimentsCatalog();
   const addMutation = useAddFridgeItem();
@@ -34,6 +23,20 @@ export default function ManualAddPage() {
   const [catalogSearch, setCatalogSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Derived inside component so t() is available
+  const UNIT_OPTIONS = [
+    { value: "count", label: t("manual.units.count") },
+    { value: "g", label: t("manual.units.g") },
+    { value: "ml", label: t("manual.units.ml") },
+    { value: "bottle", label: t("manual.units.bottle") },
+    { value: "jar", label: t("manual.units.jar") },
+    { value: "pack", label: t("manual.units.pack") },
+    { value: "tbsp", label: t("manual.units.tbsp") },
+    { value: "tsp", label: t("manual.units.tsp") },
+    { value: "cup", label: t("manual.units.cup") },
+    { value: "bunch", label: t("manual.units.bunch") },
+  ];
 
   const filteredCatalog = catalog?.filter((c) =>
     c.name.toLowerCase().includes(catalogSearch.toLowerCase())
@@ -56,7 +59,7 @@ export default function ManualAddPage() {
       setUnit("count");
       setCatalogSearch("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add item");
+      setError(err instanceof Error ? err.message : t("login.somethingWentWrong"));
     }
   }
 
@@ -69,12 +72,12 @@ export default function ManualAddPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-lg mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Add Item Manually</h1>
-        <p className="text-gray-500 mb-6">Select a condiment from the catalogue or type a custom item.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{t("manual.title")}</h1>
+        <p className="text-gray-500 mb-6">{t("manual.subtitle")}</p>
 
         {/* Condiment catalogue search */}
         <Card className="mb-6">
-          <h2 className="font-semibold text-gray-800 mb-3">Condiments Catalogue</h2>
+          <h2 className="font-semibold text-gray-800 mb-3">{t("manual.catalogueTitle")}</h2>
           {catalogLoading ? (
             <div className="flex justify-center py-4">
               <Spinner size="sm" />
@@ -82,7 +85,7 @@ export default function ManualAddPage() {
           ) : (
             <>
               <Input
-                placeholder="Search condiments…"
+                placeholder={t("manual.catalogueSearch")}
                 value={catalogSearch}
                 onChange={(e) => setCatalogSearch(e.target.value)}
                 className="mb-3"
@@ -103,7 +106,7 @@ export default function ManualAddPage() {
                   </li>
                 ))}
                 {filteredCatalog?.length === 0 && (
-                  <p className="text-sm text-gray-400 px-2 py-2">No matches</p>
+                  <p className="text-sm text-gray-400 px-2 py-2">{t("manual.noMatches")}</p>
                 )}
               </ul>
             </>
@@ -114,16 +117,16 @@ export default function ManualAddPage() {
         <Card>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
-              label="Item name"
+              label={t("manual.itemNameLabel")}
               id="item_name"
-              placeholder="e.g. fish sauce"
+              placeholder={t("manual.itemNamePlaceholder")}
               value={itemName}
               required
               onChange={(e) => setItemName(e.target.value)}
             />
             <div className="grid grid-cols-2 gap-3">
               <Input
-                label="Quantity"
+                label={t("manual.quantityLabel")}
                 id="quantity"
                 type="number"
                 min="0"
@@ -133,7 +136,7 @@ export default function ManualAddPage() {
                 onChange={(e) => setQuantity(e.target.value)}
               />
               <Select
-                label="Unit"
+                label={t("manual.unitLabel")}
                 id="unit"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
@@ -142,14 +145,14 @@ export default function ManualAddPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             {success && (
-              <p className="text-sm text-green-600">Item added to your fridge!</p>
+              <p className="text-sm text-green-600">{t("manual.successMessage")}</p>
             )}
             <div className="flex gap-2">
               <Button variant="secondary" type="button" onClick={() => router.push("/fridge")}>
-                Back to Fridge
+                {t("manual.backButton")}
               </Button>
               <Button type="submit" loading={addMutation.isPending} className="flex-1">
-                Add to Fridge
+                {t("manual.addButton")}
               </Button>
             </div>
           </form>

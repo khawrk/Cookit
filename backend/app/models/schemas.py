@@ -89,6 +89,12 @@ class RecipeStepSchema(BaseModel):
     instruction: str
 
 
+class TranslatedRecipeOut(BaseModel):
+    title: str
+    ingredients: list[dict]
+    steps: list[dict]
+
+
 class RecipeOut(BaseModel):
     id: uuid.UUID
     title: str

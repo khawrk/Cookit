@@ -15,7 +15,7 @@ Scan your fridge with a photo — AI detects what's inside and recommends recipe
 | Layer | Technology |
 |---|---|
 | Frontend | Next.js 14, TypeScript, TanStack Query v5, Zustand, Tailwind CSS |
-| Backend | FastAPI, Python 3.11+, Pydantic v2, SQLAlchemy 2.0 (async) |
+| Backend | FastAPI, Python 3.12, Pydantic v2, SQLAlchemy 2.0 (async) |
 | Database | PostgreSQL 16 + pgvector |
 | AI | Anthropic Claude (Sonnet for vision/reasoning, Haiku for classification) |
 | Queue | Redis + Celery |
@@ -25,7 +25,7 @@ Scan your fridge with a photo — AI detects what's inside and recommends recipe
 ## Prerequisites
 
 - Docker & Docker Compose
-- Python 3.11+
+- Python 3.12
 - Node.js 18+ and pnpm (`npm i -g pnpm`)
 
 ## Quickstart
@@ -58,7 +58,7 @@ docker-compose up -d          # starts Postgres 16 + Redis
 ### Backend
 ```bash
 cd backend
-python -m venv .venv && source .venv/bin/activate
+python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 # Run DB migration

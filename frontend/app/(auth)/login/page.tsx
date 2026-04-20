@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -9,6 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { useLogin, useRegister } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -30,7 +32,7 @@ export default function LoginPage() {
       }
       router.push("/fridge");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : t("login.somethingWentWrong"));
     }
   }
 
@@ -42,9 +44,9 @@ export default function LoginPage() {
         {/* Brand mark */}
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🥦</div>
-          <h1 className="text-2xl font-bold text-slate-900">Cookit</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{t("nav.brand")}</h1>
           <p className="text-slate-500 text-sm mt-1">
-            {mode === "login" ? "Sign in to continue" : "Create your account"}
+            {mode === "login" ? t("login.signInSubtitle") : t("login.registerSubtitle")}
           </p>
         </div>
 
@@ -52,25 +54,25 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {mode === "register" && (
               <Input
-                label="Name"
+                label={t("login.nameLabel")}
                 id="name"
                 type="text"
-                placeholder="Your name"
+                placeholder={t("login.namePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             )}
             <Input
-              label="Email"
+              label={t("login.emailLabel")}
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder={t("login.emailPlaceholder")}
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
-              label="Password"
+              label={t("login.passwordLabel")}
               id="password"
               type="password"
               placeholder="••••••••"
@@ -84,18 +86,18 @@ export default function LoginPage() {
               </p>
             )}
             <Button type="submit" loading={isLoading} className="w-full mt-1">
-              {mode === "login" ? "Sign in" : "Create account"}
+              {mode === "login" ? t("login.signInButton") : t("login.createAccountButton")}
             </Button>
           </form>
 
           <p className="mt-5 text-center text-sm text-slate-500">
-            {mode === "login" ? "No account? " : "Already have an account? "}
+            {mode === "login" ? t("login.noAccount") : t("login.alreadyHaveAccount")}{" "}
             <button
               type="button"
               onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(null); }}
               className="text-green-600 hover:underline font-medium"
             >
-              {mode === "login" ? "Register" : "Sign in"}
+              {mode === "login" ? t("login.registerLink") : t("login.signInButton")}
             </button>
           </p>
         </Card>

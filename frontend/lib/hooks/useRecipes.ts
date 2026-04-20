@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
-import type { RecommendResponse, Recipe } from "@/types/recipe";
+import type { RecommendResponse, Recipe, TranslatedRecipe } from "@/types/recipe";
 
 export function useRecommendations() {
   return useQuery({
@@ -15,6 +15,15 @@ export function useRecipe(id: string) {
     queryKey: ["recipes", id],
     queryFn: () => api.get<Recipe>(`/api/recipes/${id}`),
     enabled: Boolean(id),
+  });
+}
+
+export function useRecipeTranslation(id: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ["recipes", id, "translation", "th"],
+    queryFn: () => api.get<TranslatedRecipe>(`/api/recipes/${id}/translate?lang=th`),
+    enabled: enabled && Boolean(id),
+    staleTime: Infinity, // translations don't change within a session
   });
 }
 

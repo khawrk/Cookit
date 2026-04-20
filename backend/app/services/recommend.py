@@ -56,7 +56,7 @@ async def _strategy_a_sql(user_items: list[str], db: AsyncSession) -> list[dict]
             JOIN recipe_ingredients ri ON ri.recipe_id = r.id
             GROUP BY r.id, r.title, r.source_url, r.cuisine
             HAVING COUNT(ri.id) FILTER (WHERE ri.canonical_name = ANY(:user_items))::float
-                / NULLIF(COUNT(ri.id), 0) >= 0.4
+                / NULLIF(COUNT(ri.id), 0) >= 0.15
             ORDER BY overlap_score DESC
             LIMIT 20
             """
@@ -275,7 +275,7 @@ async def get_recommendations(user_id: uuid.UUID, db: AsyncSession) -> Recommend
 
     # Strategy C only if A+B return fewer than 5 results
     strategy_c_results: list[dict] = []
-    if combined_count < 5:
+    if combined_count < 1:
         strategy_c_results = await _strategy_c_ai(user_item_names)
 
     recommendations = _merge_and_rank(strategy_a_results, strategy_b_results, strategy_c_results)

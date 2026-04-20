@@ -1,7 +1,9 @@
 export interface RecipeIngredient {
   name: string;
-  quantity: number | null;
-  unit: string | null;
+  // MealDB-seeded recipes use `measure`; scraped recipes use `quantity` + `unit`
+  measure?: string | null;
+  quantity?: number | null;
+  unit?: string | null;
 }
 
 export interface RecipeStep {
@@ -18,6 +20,12 @@ export interface Recipe {
   cuisine: string | null;
   tags: string[] | null;
   scraped_at: string;
+}
+
+export interface TranslatedRecipe {
+  title: string;
+  ingredients: RecipeIngredient[];
+  steps: RecipeStep[];
 }
 
 export interface RecommendationItem {
