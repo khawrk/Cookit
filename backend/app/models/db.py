@@ -32,6 +32,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default=func.now())
 
     fridge_items: Mapped[list["FridgeItem"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    scan_corrections: Mapped[list["ScanCorrection"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
 class FridgeItem(Base):
@@ -93,3 +94,21 @@ class RecipeIngredient(Base):
     recipe: Mapped["Recipe"] = relationship(back_populates="recipe_ingredients")
 
     __table_args__ = (Index("ix_recipe_ingredients_canonical_name", "canonical_name"),)
+
+
+class ScanCorrection(Base):
+    __tablename__ = "scan_corrections"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    original_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    original_quantity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    original_unit: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    corrected_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    corrected_quantity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    corrected_unit: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), server_default=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="scan_corrections")
+
+    __table_args__ = (Index("ix_scan_corrections_user_created", "user_id", "created_at"),)

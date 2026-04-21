@@ -57,7 +57,10 @@
     "nothingDetected": "Nothing detected — try a clearer photo with better lighting.",
     "recipesCta": "Get Recipe Recommendations",
     "viewFridgeCta": "View My Fridge",
-    "tryAgainButton": "Try again"
+    "tryAgainButton": "Try again",
+    "confirmCta": "Get Recipe Recommendations",
+    "confirmWithCorrections": "Save {{count}} correction(s) & Get Recipes",
+    "editedLabel": "edited"
   },
   "manual": {
     "title": "Add Item Manually",

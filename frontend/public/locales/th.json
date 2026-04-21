@@ -57,7 +57,10 @@
     "nothingDetected": "ไม่พบรายการ — ลองถ่ายภาพที่ชัดขึ้นพร้อมแสงที่ดีขึ้น",
     "recipesCta": "รับคำแนะนำสูตรอาหาร",
     "viewFridgeCta": "ดูตู้เย็นของฉัน",
-    "tryAgainButton": "ลองอีกครั้ง"
+    "tryAgainButton": "ลองอีกครั้ง",
+    "confirmCta": "รับคำแนะนำสูตรอาหาร",
+    "confirmWithCorrections": "บันทึก {{count}} การแก้ไข & รับสูตรอาหาร",
+    "editedLabel": "แก้ไขแล้ว"
   },
   "manual": {
     "title": "เพิ่มรายการด้วยตนเอง",

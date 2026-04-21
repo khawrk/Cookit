@@ -8,10 +8,16 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
-import { useScanFridge } from "@/lib/hooks/useFridge";
-import type { DetectedItem } from "@/types/fridge";
+import { useScanFridge, useSubmitCorrections } from "@/lib/hooks/useFridge";
+import type { CorrectionEntry, DetectedItem } from "@/types/fridge";
 
 const MAX_DIMENSION = 2048;
+
+interface EditableItem {
+  original: DetectedItem;
+  current: DetectedItem;
+  isDirty: boolean;
+}
 
 function isHeic(file: File): boolean {
   return (
@@ -62,14 +68,15 @@ export default function ScanPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [detectedItems, setDetectedItems] = useState<DetectedItem[] | null>(null);
+  const [editableItems, setEditableItems] = useState<EditableItem[] | null>(null);
   const scanMutation = useScanFridge();
+  const submitCorrectionsMutation = useSubmitCorrections();
 
   useEffect(() => {
-    if (detectedItems !== null) {
+    if (editableItems !== null) {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [detectedItems]);
+  }, [editableItems]);
 
   const analyzeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -84,16 +91,62 @@ export default function ScanPage() {
 
     const prepared = await prepareImage(file);
     setPreview(URL.createObjectURL(prepared));
-    setDetectedItems(null);
+    setEditableItems(null);
 
     const result = await scanMutation.mutateAsync(prepared);
-    setDetectedItems(result.detected);
+    setEditableItems(
+      result.detected.map((item) => ({ original: item, current: { ...item }, isDirty: false }))
+    );
   }
 
   function handleRetake() {
     setPreview(null);
-    setDetectedItems(null);
+    setEditableItems(null);
     scanMutation.reset();
+  }
+
+  function updateItem(idx: number, field: keyof DetectedItem, rawValue: string) {
+    setEditableItems((prev) => {
+      if (!prev) return prev;
+      const updated = [...prev];
+      const ei = { ...updated[idx] };
+      const current = { ...ei.current };
+
+      if (field === "quantity") {
+        const parsed = parseFloat(rawValue);
+        (current as Record<string, unknown>)[field] = isNaN(parsed) ? 0 : parsed;
+      } else {
+        (current as Record<string, unknown>)[field] = rawValue;
+      }
+
+      ei.current = current;
+      ei.isDirty =
+        current.item_name !== ei.original.item_name ||
+        current.quantity !== ei.original.quantity ||
+        current.unit !== ei.original.unit;
+      updated[idx] = ei;
+      return updated;
+    });
+  }
+
+  const hasDirtyItems = editableItems?.some((ei) => ei.isDirty) ?? false;
+  const dirtyCount = editableItems?.filter((ei) => ei.isDirty).length ?? 0;
+
+  async function handleConfirm() {
+    if (hasDirtyItems && editableItems) {
+      const corrections: CorrectionEntry[] = editableItems
+        .filter((ei) => ei.isDirty)
+        .map((ei) => ({
+          original_name: ei.original.item_name,
+          original_quantity: ei.original.quantity,
+          original_unit: ei.original.unit,
+          corrected_name: ei.current.item_name,
+          corrected_quantity: ei.current.quantity,
+          corrected_unit: ei.current.unit,
+        }));
+      await submitCorrectionsMutation.mutateAsync(corrections);
+    }
+    router.push("/recipes");
   }
 
   return (
@@ -142,7 +195,7 @@ export default function ScanPage() {
                 alt="Fridge photo"
                 className={[
                   "rounded-xl w-full object-cover transition-all duration-300",
-                  detectedItems || scanMutation.isPending ? "max-h-44" : "max-h-72",
+                  editableItems || scanMutation.isPending ? "max-h-44" : "max-h-72",
                 ].join(" ")}
               />
               <button
@@ -183,33 +236,60 @@ export default function ScanPage() {
             )}
 
             {/* Results */}
-            {detectedItems && (
+            {editableItems && (
               <div ref={resultsRef} className="flex flex-col gap-3">
                 <Card>
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="font-semibold text-slate-900">
-                      {t("scan.itemsDetected", { count: detectedItems.length })}
+                      {t("scan.itemsDetected", { count: editableItems.length })}
                     </h2>
-                    <Badge variant={detectedItems.length > 0 ? "green" : "gray"}>
+                    <Badge variant={editableItems.length > 0 ? "green" : "gray"}>
                       {t("scan.savedToFridge")}
                     </Badge>
                   </div>
 
-                  {detectedItems.length === 0 ? (
+                  {editableItems.length === 0 ? (
                     <p className="text-sm text-slate-500">{t("scan.nothingDetected")}</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
-                      {detectedItems.map((item, idx) => (
-                        <li key={idx} className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0">
-                          <div>
-                            <span className="capitalize text-sm font-medium text-slate-800">{item.item_name}</span>
-                            <span className="text-xs text-slate-400 ml-2">
-                              {item.quantity} {item.unit}
-                            </span>
+                      {editableItems.map((ei, idx) => (
+                        <li key={idx} className="py-2.5 first:pt-0 last:pb-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              {/* Item name */}
+                              <input
+                                type="text"
+                                value={ei.current.item_name}
+                                onChange={(e) => updateItem(idx, "item_name", e.target.value)}
+                                className="text-sm font-medium text-slate-800 capitalize bg-transparent border border-transparent rounded px-1 focus:border-slate-300 focus:outline-none focus:bg-white w-full min-w-0"
+                              />
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              {/* Quantity */}
+                              <input
+                                type="number"
+                                value={ei.current.quantity}
+                                onChange={(e) => updateItem(idx, "quantity", e.target.value)}
+                                className="text-xs text-slate-500 bg-transparent border border-transparent rounded px-1 focus:border-slate-300 focus:outline-none focus:bg-white w-14 text-right"
+                              />
+                              {/* Unit */}
+                              <input
+                                type="text"
+                                value={ei.current.unit}
+                                onChange={(e) => updateItem(idx, "unit", e.target.value)}
+                                className="text-xs text-slate-500 bg-transparent border border-transparent rounded px-1 focus:border-slate-300 focus:outline-none focus:bg-white w-14"
+                              />
+                              {ei.isDirty ? (
+                                <span className="text-xs font-medium text-amber-600 bg-amber-50 rounded px-1.5 py-0.5">
+                                  {t("scan.editedLabel")}
+                                </span>
+                              ) : (
+                                <Badge variant={ei.current.confidence >= 0.8 ? "green" : "yellow"}>
+                                  {Math.round(ei.current.confidence * 100)}%
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                          <Badge variant={item.confidence >= 0.8 ? "green" : "yellow"}>
-                            {Math.round(item.confidence * 100)}%
-                          </Badge>
                         </li>
                       ))}
                     </ul>
@@ -217,8 +297,22 @@ export default function ScanPage() {
                 </Card>
 
                 <div className="flex flex-col gap-2">
-                  <Button onClick={() => router.push("/recipes")} className="w-full" size="lg">
-                    {t("scan.recipesCta")}
+                  <Button
+                    onClick={handleConfirm}
+                    className="w-full"
+                    size="lg"
+                    disabled={submitCorrectionsMutation.isPending}
+                  >
+                    {submitCorrectionsMutation.isPending ? (
+                      <span className="flex items-center gap-2">
+                        <Spinner size="sm" />
+                        <span>Saving…</span>
+                      </span>
+                    ) : hasDirtyItems ? (
+                      t("scan.confirmWithCorrections", { count: dirtyCount })
+                    ) : (
+                      t("scan.confirmCta")
+                    )}
                   </Button>
                   <Button
                     variant="secondary"
