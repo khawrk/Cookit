@@ -42,3 +42,16 @@ export interface FridgeItemUpdate {
   unit?: string;
   category?: string;
 }
+
+export interface CorrectionEntry {
+  original_name: string;
+  original_quantity: number | null;
+  original_unit: string | null;
+  corrected_name: string;
+  corrected_quantity: number | null;
+  corrected_unit: string | null;
+}
+
+export interface CorrectionsResponse {
+  saved_count: number;
+}

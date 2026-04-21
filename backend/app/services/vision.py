@@ -4,16 +4,16 @@ import json
 import logging
 import re
 import uuid
-from functools import wraps
 from typing import Any
 
 import anthropic
 from fastapi import UploadFile
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
-from app.models.schemas import DetectedItem, ScanResponse
+from app.models.db import ScanCorrection
+from app.models.schemas import CorrectionEntry, CorrectionsResponse, DetectedItem, ScanResponse
 from app.services import storage
 from app.services.normalize import normalize_batch
 
@@ -46,6 +46,79 @@ Rules:
 _semaphore = asyncio.Semaphore(5)
 
 
+async def _fetch_recent_corrections(db: AsyncSession, user_id: uuid.UUID, limit: int = 5) -> list[ScanCorrection]:
+    result = await db.execute(
+        select(ScanCorrection)
+        .where(ScanCorrection.user_id == user_id)
+        .order_by(ScanCorrection.created_at.desc())
+        .limit(limit)
+    )
+    return list(result.scalars().all())
+
+
+def _build_system_prompt(corrections: list[ScanCorrection]) -> str:
+    if not corrections:
+        return VISION_SYSTEM_PROMPT
+    # Reverse so prompt reads oldest → newest (chronological)
+    ordered = list(reversed(corrections))
+    examples = []
+    for c in ordered:
+        orig = f'"{c.original_name}"'
+        if c.original_quantity is not None:
+            orig += f" ({c.original_quantity} {c.original_unit or ''})"
+        corr = f'"{c.corrected_name}"'
+        if c.corrected_quantity is not None:
+            corr += f" ({c.corrected_quantity} {c.corrected_unit or ''})"
+        examples.append(f"  - You detected {orig} → user corrected to {corr}")
+    past_section = "\n\nPast corrections from this user (avoid repeating these mistakes):\n" + "\n".join(examples)
+    return VISION_SYSTEM_PROMPT + past_section
+
+
+async def save_corrections(
+    db: AsyncSession, user_id: uuid.UUID, entries: list[CorrectionEntry]
+) -> int:
+    rows = [
+        ScanCorrection(
+            user_id=user_id,
+            original_name=e.original_name,
+            original_quantity=e.original_quantity,
+            original_unit=e.original_unit,
+            corrected_name=e.corrected_name,
+            corrected_quantity=e.corrected_quantity,
+            corrected_unit=e.corrected_unit,
+        )
+        for e in entries
+    ]
+    db.add_all(rows)
+
+    # Also update fridge_items to reflect corrections
+    for e in entries:
+        await db.execute(
+            text(
+                """
+                UPDATE fridge_items
+                SET item_name  = :corrected_name,
+                    quantity   = COALESCE(:corrected_quantity, quantity),
+                    unit       = COALESCE(:corrected_unit, unit),
+                    updated_at = now()
+                WHERE user_id  = :user_id
+                  AND item_name = :original_name
+                """
+            ),
+            {
+                "user_id": str(user_id),
+                "original_name": e.original_name,
+                "corrected_name": e.corrected_name,
+                "corrected_quantity": e.corrected_quantity,
+                "corrected_unit": e.corrected_unit,
+            },
+        )
+
+    await db.commit()
+    logger.info("Saved %d corrections for user %s", len(entries), user_id)
+    return len(entries)
+
+
 def _strip_markdown_fences(text: str) -> str:
     return re.sub(r"```(?:json)?\s*|\s*```", "", text).strip()
 
@@ -75,12 +148,16 @@ async def detect_items(file: UploadFile, db: AsyncSession, user_id: uuid.UUID) -
 
     b64_data = base64.b64encode(file_bytes).decode()
 
+    # Inject past corrections as few-shot examples into the system prompt
+    recent_corrections = await _fetch_recent_corrections(db, user_id)
+    system_prompt = _build_system_prompt(recent_corrections)
+
     async with _semaphore:
         response = await _call_with_retry(
             client.messages.create,
             model="claude-sonnet-4-20250514",
             max_tokens=1024,
-            system=VISION_SYSTEM_PROMPT,
+            system=system_prompt,
             messages=[
                 {
                     "role": "user",

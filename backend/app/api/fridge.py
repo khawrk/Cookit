@@ -10,6 +10,8 @@ from app.dependencies import get_current_user
 from app.models.db import CondimentsCatalog, FridgeItem, User
 from app.models.schemas import (
     CondimentCatalogItem,
+    CorrectionsRequest,
+    CorrectionsResponse,
     FridgeItemIn,
     FridgeItemOut,
     FridgeItemUpdate,
@@ -126,6 +128,16 @@ async def delete_fridge_item(
 
     await db.delete(item)
     await db.commit()
+
+
+@router.post("/corrections", response_model=CorrectionsResponse, status_code=status.HTTP_201_CREATED)
+async def submit_corrections(
+    payload: CorrectionsRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> CorrectionsResponse:
+    count = await vision.save_corrections(db, current_user.id, payload.corrections)
+    return CorrectionsResponse(saved_count=count)
 
 
 @router.get("/catalog", response_model=list[CondimentCatalogItem])

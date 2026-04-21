@@ -4,9 +4,13 @@ import sys
 from logging.config import fileConfig
 
 from alembic import context
+from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
+# Load backend/.env so DATABASE_URL is available when running alembic from db/
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", "backend", ".env"))
 
 # Add backend to path so we can import models
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
@@ -21,8 +25,9 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
-if DATABASE_URL:
-    config.set_main_option("sqlalchemy.url", DATABASE_URL)
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is not set. Check backend/.env or export it before running alembic.")
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 
 def run_migrations_offline() -> None:

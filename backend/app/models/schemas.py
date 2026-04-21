@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, model_validator
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -120,6 +120,41 @@ class RecommendationItem(BaseModel):
 
 class RecommendResponse(BaseModel):
     recommendations: list[RecommendationItem]
+
+
+# ── Scan Corrections ──────────────────────────────────────────────────────────
+
+class CorrectionEntry(BaseModel):
+    original_name: str
+    original_quantity: float | None = None
+    original_unit: str | None = None
+    corrected_name: str
+    corrected_quantity: float | None = None
+    corrected_unit: str | None = None
+
+    @model_validator(mode="after")
+    def must_differ(self) -> "CorrectionEntry":
+        if (
+            self.original_name == self.corrected_name
+            and self.original_quantity == self.corrected_quantity
+            and self.original_unit == self.corrected_unit
+        ):
+            raise ValueError("Correction must change at least one field")
+        return self
+
+
+class CorrectionsRequest(BaseModel):
+    corrections: list[CorrectionEntry]
+
+    @model_validator(mode="after")
+    def must_be_non_empty(self) -> "CorrectionsRequest":
+        if not self.corrections:
+            raise ValueError("corrections list must not be empty")
+        return self
+
+
+class CorrectionsResponse(BaseModel):
+    saved_count: int
 
 
 # ── Normalisation ─────────────────────────────────────────────────────────────
