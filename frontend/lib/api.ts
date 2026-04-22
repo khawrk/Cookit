@@ -10,14 +10,22 @@ function handleUnauthorized() {
   }
 }
 
+function getStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("cookit-token");
+}
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { body, headers, ...rest } = options;
+  const token = getStoredToken();
 
   const res = await fetch(`${BASE_URL}${path}`, {
     ...rest,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      // Send Bearer token so mobile browsers (which block cross-origin httpOnly cookies) can auth
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -51,9 +59,11 @@ export const api = {
   },
 
   async postForm<T>(path: string, formData: FormData): Promise<T> {
+    const token = getStoredToken();
     const res = await fetch(`${BASE_URL}${path}`, {
       method: "POST",
       credentials: "include",
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body: formData,
     });
 
